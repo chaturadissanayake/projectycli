@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Strategic Field Assessment by Chatura Dissanayake.">
+    <title>YCLI: Strategic Field Assessment | Chatura Dissanayake</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <style>
+        /* --- 1. RESET & VARIABLES --- */
+        :root {
+            --bg: #050505;
+            --surface: #0f0f0f;
+            --text-main: #F2F2F2;
+            --text-muted: #888888;
+            --accent: #D4AF37; /* Strategic Gold */
+            --accent-dim: rgba(212, 175, 55, 0.1);
+            --border: rgba(255,255,255,0.08);
+            
+            --font-head: 'Playfair Display', serif;
+            --font-body: 'Inter', sans-serif;
+            
+            --nav-height: 80px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        
+        body { 
+            background: var(--bg); color: var(--text-main); 
+            font-family: var(--font-body); line-height: 1.6;
+            overflow-x: hidden; -webkit-font-smoothing: antialiased;
+        }
+
+        /* Typography */
+        h1, h2, h3, h4 { font-family: var(--font-head); font-weight: 400; color: #fff; margin: 0; }
+        p { color: var(--text-muted); margin-bottom: 1.5rem; font-weight: 300; font-size: 1.05rem; }
+        a { text-decoration: none; color: inherit; transition: 0.3s ease; }
+        
+        /* The Label (Phase Markers) */
+        .label {
+            font-family: var(--font-body); font-size: 0.7rem; 
+            text-transform: uppercase; letter-spacing: 0.2em; 
+            color: var(--accent); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 12px;
+            opacity: 0.9; position: relative; z-index: 2;
+        }
+        .label::before { content: ''; width: 30px; height: 1px; background: var(--accent); }
+
+        /* --- 2. LAYOUT UTILITIES --- */
+        .container { 
+            max-width: 1280px; margin: 0 auto; padding: 0 5vw; 
+        }
+
+        /* Sticky Nav */
+        .sticky-nav {
+            position: fixed; top: 0; width: 100%; height: var(--nav-height);
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 5vw; z-index: 1000;
+            background: rgba(5, 5, 5, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            transform: translateY(-100%);
+            transition: transform 0.4s ease;
+        }
+        .nav-brand { font-family: var(--font-head); font-size: 1.2rem; letter-spacing: 0.05em; color: #fff; }
+        .nav-cta { 
+            font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; 
+            color: var(--accent); border: 1px solid var(--accent); padding: 10px 24px;
+        }
+        .nav-cta:hover { background: var(--accent); color: #000; }
+
+        /* Scroll Progress */
+        .progress-container {
+            position: fixed; top: 0; left: 0; width: 100%; height: 2px; z-index: 1001;
+            background: transparent;
+        }
+        .progress-bar {
+            height: 100%; background: var(--accent); width: 0%;
+        }
+
+        /* --- 3. HERO (Updated) --- */
+        .hero {
+            min-height: 100vh; position: relative;
+            display: flex; align-items: center;
+            border-bottom: 1px solid var(--border);
+            overflow: hidden;
+        }
+        .hero-bg {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url('YCLI/Assets/hero-sdg-impact.jpg');
+            background-size: cover; background-position: center;
+            opacity: 0.15;
+            z-index: 0; filter: grayscale(100%);
+            transform: scale(1.1);
+        }
+        
+        .hero-content { 
+            position: relative; z-index: 2; width: 100%; padding-top: 5vh;
+        }
+        
+        .hero-meta {
+            font-family: var(--font-body); font-size: 0.8rem; letter-spacing: 0.15em;
+            color: var(--accent); text-transform: uppercase; margin-bottom: 2rem;
+            display: block; position: relative;
+        }
+        
+        /* FIX: Force years to stay together */
+        .year-span { white-space: nowrap; }
+        
+        .hero h1 { 
+            font-size: clamp(3.5rem, 8vw, 7.5rem); 
+            line-height: 1.05; margin-bottom: 2.5rem; 
+            letter-spacing: -0.02em;
+        }
+        
+        .hero p { 
+            max-width: 500px; font-size: 1.1rem; line-height: 1.6; color: #ccc; margin-top: 1rem;
+        }
+        
+        /* Gold Scroll Indicator */
+        .scroll-indicator {
+            position: absolute; bottom: 40px; right: 5vw;
+            z-index: 2; animation: bounce 2s infinite;
+            color: var(--accent);
+        }
+        @keyframes bounce { 0%, 20%, 50%, 80%, 100% {transform: translateY(0);} 40% {transform: translateY(-10px);} 60% {transform: translateY(-5px);} }
+
+        /* --- 4. SECTIONS --- */
+        .section-block {
+            padding: 140px 0; border-bottom: 1px solid var(--border);
+            position: relative; background: var(--bg); z-index: 1;
+        }
+        .narrative-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;
+        }
+        
+        .img-wrapper {
+            position: relative; width: 100%; aspect-ratio: 16/10; overflow: hidden;
+            border: 1px solid var(--border); cursor: zoom-in; border-radius: 2px;
+        }
+        .img-wrapper img {
+            width: 100%; height: 100%; object-fit: cover;
+            transition: transform 0.6s cubic-bezier(0.2, 1, 0.3, 1), filter 0.3s;
+        }
+        .img-wrapper:hover img { transform: scale(1.03); filter: brightness(1.1); }
+        
+        .text-col h2 { font-size: clamp(2.5rem, 4vw, 3.5rem); margin-bottom: 1.5rem; }
+        
+        .meta-tag {
+            display: inline-flex; align-items: center; gap: 10px;
+            font-size: 0.75rem; color: #666; text-transform: uppercase; letter-spacing: 0.1em;
+            padding-top: 2rem; margin-top: 1rem; border-top: 1px solid var(--border); width: 100%;
+        }
+
+        /* --- 5. TEAM --- */
+        .team-section { background: var(--surface); }
+        .team-header { text-align: center; margin-bottom: 6rem; }
+        .team-flex { display: flex; gap: 30px; justify-content: center; flex-wrap: wrap; align-items: stretch; }
+        .team-card {
+            flex: 1; min-width: 300px; max-width: 500px;
+            background: var(--bg); border: 1px solid var(--border); padding: 30px;
+            transition: transform 0.3s; cursor: pointer; display: flex; flex-direction: column; height: auto;
+        }
+        .team-card:hover { transform: translateY(-8px); border-color: var(--accent); }
+        .team-card img { width: 100%; aspect-ratio: 4/5; object-fit: cover; margin-bottom: 1.5rem; transition: 0.5s; }
+        .team-info { margin-top: auto; }
+
+        /* --- 6. PDF DOWNLOAD --- */
+        .pdf-section { 
+            padding: 180px 0; background: #000; border-bottom: 1px solid var(--border); 
+            text-align: left; 
+            position: relative; z-index: 10;
+        }
+        
+        .pdf-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start;
+        }
+        
+        .pdf-content h2 { 
+            font-size: clamp(3rem, 6vw, 6.5rem); margin-bottom: 2rem; line-height: 1; white-space: nowrap;
+        }
+        
+        .pdf-content p { max-width: 500px; margin: 0 0 3rem 0; color: #888; font-size: 1.1rem; }
+        
+        .btn-download {
+            padding: 1.2rem 4rem; border: 1px solid var(--accent); color: var(--accent); 
+            background: rgba(212, 175, 55, 0.05); 
+            text-transform: uppercase; letter-spacing: 0.15em; font-size: 0.85rem;
+            display: inline-block; transition: all 0.3s ease; cursor: pointer; position: relative; z-index: 20;
+        }
+        .btn-download:hover { background: var(--accent); color: #000; box-shadow: 0 0 30px rgba(212, 175, 55, 0.3); }
+
+        /* --- 7. ARCHIVE GRID --- */
+        .masonry-header { margin-bottom: 4rem; display: flex; justify-content: space-between; align-items: end; border-bottom: 1px solid var(--border); padding-bottom: 2rem; }
+        
+        .masonry-grid { 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 20px; 
+            align-items: start; 
+        }
+        
+        .masonry-item {
+            background: var(--surface); border: 1px solid var(--border);
+            cursor: zoom-in; transition: border-color 0.3s;
+        }
+        .masonry-item:hover { border-color: var(--accent); }
+        .masonry-item img { width: 100%; display: block; opacity: 0.9; transition: 0.4s; }
+        .masonry-item:hover img { opacity: 1; }
+        .caption-visible {
+            padding: 15px; font-size: 0.7rem; color: #666; font-family: var(--font-body); text-transform: uppercase; letter-spacing: 0.05em;
+            border-top: 1px solid var(--border); display: flex; justify-content: space-between;
+        }
+        .caption-visible span { color: var(--accent); font-weight: 600; }
+
+        /* Mobile Load More */
+        .load-more-container { text-align: center; margin-top: 30px; display: none; }
+        .btn-load-more {
+            padding: 1rem 2.5rem; border: 1px solid var(--border); color: var(--text-muted);
+            background: transparent; text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.75rem;
+            cursor: pointer; transition: 0.3s;
+        }
+        .btn-load-more:hover { border-color: var(--accent); color: var(--accent); }
+
+        /* --- 8. FOOTER --- */
+        footer { padding: 100px 0 40px; background: var(--bg); border-top: 1px solid var(--border); z-index: 5; position: relative; }
+        .footer-flex { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 80px; }
+        .footer-brand h3 { font-size: 2rem; margin-bottom: 0.5rem; color: #fff; }
+        .footer-brand p { font-size: 0.85rem; color: #666; text-transform: uppercase; letter-spacing: 0.1em; }
+        .social-links { display: flex; gap: 20px; }
+        .social-links a { color: #666; transition: 0.3s; padding: 10px; display: flex; align-items: center; justify-content: center; }
+        .social-links a:hover { color: var(--accent); transform: translateY(-3px); }
+        .footer-bottom { 
+            border-top: 1px solid var(--border); padding-top: 30px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 20px;
+            font-size: 0.7rem; color: #444; text-transform: uppercase; letter-spacing: 0.1em; 
+        }
+
+        /* --- 9. LIGHTBOX --- */
+        .lightbox {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95); backdrop-filter: blur(5px); z-index: 9999; display: none;
+            align-items: center; justify-content: center; flex-direction: column; opacity: 0; transition: opacity 0.3s ease;
+        }
+        .lightbox.active { display: flex; opacity: 1; }
+        .lightbox img { max-height: 80vh; max-width: 90vw; object-fit: contain; border: 1px solid #333; }
+        .lb-caption { margin-top: 2rem; color: var(--accent); font-family: var(--font-body); letter-spacing: 0.15em; text-transform: uppercase; font-size: 0.8rem; }
+        .lb-close { 
+            position: absolute; top: 30px; right: 30px; color: #fff; cursor: pointer; width: 50px; height: 50px; 
+            display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.1); border-radius: 50%; transition: 0.3s;
+        }
+        .lb-close:hover { background: rgba(255,255,255,0.2); transform: rotate(90deg); }
+
+        /* --- MOBILE --- */
+        @media (max-width: 1024px) {
+            .narrative-grid { grid-template-columns: 1fr; gap: 60px; }
+            .pdf-grid { grid-template-columns: 1fr; gap: 40px; }
+            .layout-reverse { display: flex; flex-direction: column-reverse; }
+            .masonry-grid { grid-template-columns: repeat(2, 1fr); }
+            .footer-flex { flex-direction: column; gap: 40px; }
+        }
+
+        @media (max-width: 600px) {
+            .hero-content { padding-top: 15vh; }
+            .hero h1 { font-size: 3.5rem; margin-bottom: 1.5rem; }
+            
+            .section-block { padding: 100px 0; }
+            .pdf-content h2 { white-space: normal; font-size: 3rem; }
+            
+            .narrative-grid { gap: 40px; }
+            .btn-download { width: 100%; text-align: center; }
+            
+            .footer-flex { align-items: center; text-align: center; gap: 30px; }
+            .social-links { justify-content: center; width: 100%; }
+            .footer-bottom { flex-direction: column; text-align: center; gap: 15px; }
+            
+            .masonry-grid { grid-template-columns: 1fr; }
+            .masonry-item.mobile-hidden { display: none; }
+            .load-more-container { display: block; }
+        }
+    </style>
+</head>
+<body id="top">
+
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <nav class="sticky-nav" id="navbar">
+        <div class="nav-brand">Chatura Dissanayake</div>
+        <a href="#footer" class="nav-cta">Connect</a>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-bg"></div>
+        <div class="container">
+            <div class="hero-content">
+                <span class="hero-meta brand-anim">
+                    Sabaragamuwa Province &nbsp;|&nbsp; 
+                    <span class="year-span">2021—2022</span>
+                </span>
+                <h1 class="brand-anim">Strategic<br>Field<br>Assessment</h1>
+                <p class="brand-anim">Youth Community Leadership Initiative (YCLI). Bridging the gap between UN strategic frameworks and rural community needs in the Aranayake Division.</p>
+            </div>
+        </div>
+        <div class="scroll-indicator brand-anim">
+            <i data-lucide="arrow-down" size="32"></i>
+        </div>
+    </header>
+
+    <main>
+        <section class="section-block" id="strategy">
+            <div class="container narrative-grid">
+                <div class="text-col">
+                    <span class="label">Phase 01 / Capacity Building</span>
+                    <h2>Collaborative Group Work</h2>
+                    <p>Participating in the Phase 1 residential training with fellow youth leaders. Our group focused on dissecting community issues using the "Healthy Settings" framework.</p>
+                    <p>This session was instrumental in learning how to identify structural lines dividing the community and preparing for the Community Needs Assessment.</p>
+                    <div class="meta-tag">
+                        <i data-lucide="camera" size="16"></i> &nbsp; Strategic Documentation
+                    </div>
+                </div>
+                <div class="img-wrapper" onclick="openLightbox('YCLI/Assets/strategy-lead-masked.jpg', 'Group Work: Phase 1 Training')">
+                    <img src="YCLI/Assets/strategy-lead-masked.jpg" alt="Phase 1 Group Work" loading="lazy">
+                </div>
+            </div>
+        </section>
+
+        <section class="section-block" id="analysis">
+            <div class="container narrative-grid layout-reverse">
+                <div class="img-wrapper" onclick="openLightbox('YCLI/Assets/public-facilitation.jpg', 'Active Dialogue in Cohort 2')">
+                    <img src="YCLI/Assets/public-facilitation.jpg" alt="Active Dialogue" loading="lazy">
+                </div>
+                <div class="text-col">
+                    <span class="label">Phase 03 / Advanced Training</span>
+                    <h2>Active Dialogue</h2>
+                    <p>Participating in the second round of training with Cohort 02. Here, I am raising a critical question regarding community engagement strategies during a plenary session.</p>
+                    <p>This phase provided a platform to share field experiences and refine our approach to the "Healthy Settings" implementation.</p>
+                    <div class="meta-tag">
+                        <i data-lucide="mic" size="16"></i> &nbsp; Participant Voice
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section-block team-section">
+            <div class="container">
+                <div class="team-header">
+                    <span class="label" style="justify-content: center;">Phase 03 / Implementation</span>
+                    <h2>Project Mobilisation</h2>
+                    <p>Collaborating with the Ministry of Youth & Sports and UN partners (WHO, UNDP, UNV) to drive community impact.</p>
+                </div>
+
+                <div class="team-flex">
+                    <div class="team-card" onclick="openLightbox('YCLI/Assets/leadership-blue-shirt.jpg', 'Phase 01 Team')">
+                        <img src="YCLI/Assets/leadership-blue-shirt.jpg" alt="Phase 01 Team" loading="lazy">
+                        <div class="team-info">
+                            <h3>Phase 01 Team</h3>
+                            <p>My team during the 8-day residential training. We worked together to conduct the initial conflict mapping and community assessment.</p>
+                        </div>
+                    </div>
+
+                    <div class="team-card" onclick="openLightbox('YCLI/Assets/stakeholder-dialogue.jpg', 'Phase 03 Training')">
+                        <img src="YCLI/Assets/stakeholder-dialogue.jpg" alt="Phase 03 Training" loading="lazy">
+                        <div class="team-info">
+                            <h3>Phase 03 Training</h3>
+                            <p>Reconnecting with peers during the Phase 3 advanced training. A valuable opportunity to consolidate learning and plan future interventions.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="pdf-section">
+            <div class="container">
+                <div class="pdf-grid">
+                    <div class="pdf-content">
+                        <span class="label">The Deliverable</span>
+                        <h2>Strategic<br>Blueprint.</h2>
+                        <p>The culmination of 12 months of observations. A technical analysis of Aranayake's social fabric, environmental assets, and economic gaps.</p>
+                        <a href="YCLI/Assets/Community Needs Assessment v.3.pdf" target="_blank" class="btn-download">
+                            Download Assessment (v.3)
+                        </a>
+                    </div>
+                    <div></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section-block" id="archive">
+            <div class="container">
+                <div class="masonry-header">
+                    <div>
+                        <h2>Field Observations</h2>
+                        <p style="margin:0; opacity: 0.6; font-size: 0.9rem;">17 data points scanning the landscape.</p>
+                    </div>
+                    <div class="label" style="margin:0;">Archive 2021</div>
+                </div>
+                
+                <div class="masonry-grid" id="masonryGrid"></div>
+
+                <div class="load-more-container">
+                    <button class="btn-load-more" id="loadMoreBtn">Load More Observations</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer id="footer">
+        <div class="container">
+            <div class="footer-flex">
+                <div class="footer-brand">
+                    <h3>Chatura Dissanayake</h3>
+                    <p>Field Documentation & Strategy</p>
+                </div>
+                <div class="social-links">
+                    <a href="https://www.instagram.com/chaturadissanayake/" target="_blank" aria-label="Instagram"><i data-lucide="instagram"></i></a>
+                    <a href="https://web.facebook.com/chaturadissanayake/?_rdc=1&_rdr#" target="_blank" aria-label="Facebook"><i data-lucide="facebook"></i></a>
+                    <a href="https://www.linkedin.com/in/chaturadissanayake/" target="_blank" aria-label="LinkedIn"><i data-lucide="linkedin"></i></a>
+                    <a href="https://github.com/chaturadissanayake" target="_blank" aria-label="GitHub"><i data-lucide="github"></i></a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div>Partners: WHO . UNDP . UNV . NYSC</div>
+                <div>&copy; 2026 Chatura Dissanayake. All Rights Reserved.</div>
+            </div>
+        </div>
+    </footer>
+
+    <div class="lightbox" id="lightbox" onclick="if(event.target === this) closeLightbox()">
+        <div class="lb-close" onclick="closeLightbox()"><i data-lucide="x" size="24"></i></div>
+        <img id="lb-img" src="" alt="Enlarged view">
+        <div class="lb-caption" id="lb-caption"></div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        // 1. GRID & CAPTIONS
+        const grid = document.getElementById('masonryGrid');
+        const loadMoreBtn = document.getElementById('loadMoreBtn');
+        
+        const captions = [
+            "Terrain Mapping", 
+            "Infrastructure Gap", 
+            "Water Resource", 
+            "Asupini Ella View", 
+            "Logistics Route", 
+            "Community Hub", 
+            "Agricultural Survey", 
+            "Canopy Analysis", 
+            "Transit Path", 
+            "Local Architecture", 
+            "Field Monitor", 
+            "Asset Verification", 
+            "Road Access", 
+            "Topography Scan", 
+            "Harvest Data", 
+            "Village Boundary", 
+            "Final Inspection"
+        ];
+        
+        captions.forEach((cap, index) => {
+            let i = index + 1;
+            let num = i.toString().padStart(2, '0');
+            let div = document.createElement('div');
+            let filePath = `YCLI/Assets/field-${num}.jpg`;
+            
+            // Mobile: Hide items > 6
+            let mobileClass = index > 5 ? 'mobile-hidden' : '';
+            
+            div.className = `masonry-item ${mobileClass}`;
+            div.innerHTML = `
+                <img src="${filePath}" loading="lazy" alt="Field observation: ${cap}">
+                <div class="caption-visible">
+                    <span>${num}</span>
+                    <span style="font-weight:400; color: #888;">${cap}</span>
+                </div>
+            `;
+            div.onclick = () => openLightbox(filePath, `Field Observation: ${cap}`);
+            grid.appendChild(div);
+        });
+
+        // Load More Button
+        loadMoreBtn.addEventListener('click', function() {
+            document.querySelectorAll('.mobile-hidden').forEach(item => {
+                item.style.display = 'block';
+                gsap.from(item, { autoAlpha: 0, y: 20, ease: "power2.out", duration: 0.5 });
+            });
+            this.style.display = 'none';
+        });
+
+        // 2. LIGHTBOX
+        const lb = document.getElementById('lightbox');
+        const lbImg = document.getElementById('lb-img');
+        const lbCap = document.getElementById('lb-caption');
+        function openLightbox(src, text) {
+            lbImg.src = src; lbCap.innerText = text; lb.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeLightbox() {
+            lb.classList.remove('active'); document.body.style.overflow = 'auto';
+        }
+        document.addEventListener('keydown', function(event) {
+            if (event.key === "Escape" && lb.classList.contains('active')) closeLightbox();
+        });
+
+        // 3. SCROLL PROGRESS & NAVBAR
+        window.onscroll = function() {
+            let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            let scrolled = (winScroll / height) * 100;
+            document.getElementById("progressBar").style.width = scrolled + "%";
+            const navbar = document.getElementById("navbar");
+            if (winScroll > 100) { navbar.style.transform = "translateY(0)"; } 
+            else { navbar.style.transform = "translateY(-100%)"; }
+        };
+
+        // 4. ANIMATIONS
+        gsap.registerPlugin(ScrollTrigger);
+        
+        // Hero Entrance
+        const heroTL = gsap.timeline({ defaults: { ease: "power3.out", duration: 1 }});
+        heroTL.from(".brand-anim", { y: 60, opacity: 0, stagger: 0.2, delay: 0.3 });
+
+        // Scroll Triggers
+        document.querySelectorAll('.section-block, .pdf-section').forEach(sec => {
+            gsap.from(sec.querySelectorAll('h2, p, .img-wrapper, .team-card'), {
+                y: 50, opacity: 0, duration: 1, stagger: 0.1, ease: "power2.out",
+                scrollTrigger: { trigger: sec, start: "top 85%" }
+            });
+        });
+
+        // Masonry Stagger
+        ScrollTrigger.batch(".masonry-item:not(.mobile-hidden)", {
+            onEnter: batch => gsap.to(batch, {autoAlpha: 1, stagger: 0.1}),
+            start: "top 90%"
+        });
+    </script>
+</body>
+</html>

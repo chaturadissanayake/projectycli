@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Little Learners Academy | Nurturing Future Leaders</title>
+    <style>
+        /* --- RESET & BASIC STYLES --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary-purple: #6a1b9a; /* Matches your image */
+            --primary-yellow: #ffeb3b; /* Matches your image */
+            --text-dark: #333;
+            --text-light: #fff;
+            --bg-light: #f9f9f9;
+        }
+
+        body {
+            line-height: 1.6;
+            color: var(--text-dark);
+            background-color: var(--bg-light);
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        /* --- HEADER & NAVIGATION --- */
+        header {
+            background-color: var(--primary-purple);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 5px solid var(--primary-yellow);
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            height: 70px;
+        }
+
+        .logo {
+            color: var(--text-light);
+            font-size: 1.5rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-links li {
+            position: relative;
+        }
+
+        .nav-links a {
+            color: var(--text-light);
+            font-weight: 500;
+            padding: 10px 15px;
+            transition: color 0.3s;
+            font-size: 0.95rem;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-yellow);
+        }
+
+        /* DROPDOWN MENU */
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: #7e2fb0; /* Slightly lighter purple */
+            min-width: 220px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            border-top: 3px solid var(--primary-yellow);
+        }
+
+        .nav-links li:hover .dropdown-menu {
+            display: block;
+        }
+
+        .dropdown-menu li {
+            width: 100%;
+        }
+
+        .dropdown-menu a {
+            display: block;
+            padding: 12px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .dropdown-menu a:hover {
+            background-color: var(--primary-purple);
+        }
+
+        /* HAMBURGER MENU (Mobile) */
+        .hamburger {
+            display: none;
+            cursor: pointer;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .bar {
+            width: 25px;
+            height: 3px;
+            background-color: var(--text-light);
+        }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            background: linear-gradient(rgba(106, 27, 154, 0.7), rgba(106, 27, 154, 0.7)), url('https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            height: 600px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: var(--text-light);
+            padding: 20px;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background-color: var(--primary-yellow);
+            color: var(--primary-purple);
+            font-weight: bold;
+            border-radius: 50px;
+            transition: transform 0.2s, background-color 0.2s;
+        }
+
+        .btn:hover {
+            background-color: #fff;
+            transform: scale(1.05);
+        }
+
+        /* --- SECTIONS GENERAL --- */
+        .section {
+            padding: 60px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.2rem;
+            color: var(--primary-purple);
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background-color: var(--primary-yellow);
+            margin: 10px auto;
+        }
+
+        /* --- PROGRAMMES --- */
+        .programs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .program-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+            border-bottom: 5px solid var(--primary-purple);
+        }
+
+        .program-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .program-img {
+            height: 200px;
+            background-color: #ddd;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .program-content {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .program-content h3 {
+            color: var(--primary-purple);
+            margin-bottom: 10px;
+        }
+
+        /* --- ABOUT & PENTEMIND --- */
+        .about-container {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .about-text {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .about-image {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .about-image img {
+            width: 100%;
+            border-radius: 10px;
+            box-shadow: 10px 10px 0px var(--primary-yellow);
+        }
+
+        /* --- STATS / ICONS --- */
+        .features {
+            background-color: var(--primary-purple);
+            color: white;
+            padding: 60px 20px;
+        }
+        
+        .features-grid {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+            gap: 20px;
+        }
+
+        .feature-item h3 {
+            margin-top: 10px;
+            color: var(--primary-yellow);
+        }
+
+        /* --- CONTACT & FOOTER --- */
+        .contact-section {
+            background-color: #f0f0f0;
+        }
+
+        .contact-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+        }
+
+        .contact-form {
+            flex: 2;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .contact-info {
+            flex: 1;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        footer {
+            background-color: #333;
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            max-width: 1200px;
+            margin: 0 auto;
+            gap: 30px;
+            text-align: left;
+        }
+
+        .footer-col h4 {
+            color: var(--primary-yellow);
+            margin-bottom: 15px;
+        }
+
+        .footer-col ul li {
+            margin-bottom: 8px;
+        }
+
+        .copyright {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #555;
+            font-size: 0.9rem;
+        }
+
+        /* --- MOBILE MEDIA QUERIES --- */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                background-color: var(--primary-purple);
+                text-align: center;
+                padding: 20px 0;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .dropdown-menu {
+                position: static;
+                background-color: #5a1484;
+                box-shadow: none;
+                border: none;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <span>🧸 NurseryName</span>
+            </div>
+            
+            <ul class="nav-links">
+                <li><a href="#">Home</a></li>
+                
+                <li>
+                    <a href="#">About Us ▾</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">Legacy</a></li>
+                        <li><a href="#">Kidzee Advantage</a></li>
+                        <li><a href="#">Vision & Mission</a></li>
+                        <li><a href="#">Awards and Recognition</a></li>
+                    </ul>
+                </li>
+
+                <li>
+                    <a href="#programs">Programmes ▾</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">Playgroup</a></li>
+                        <li><a href="#">Nursery</a></li>
+                        <li><a href="#">Kindergarten</a></li>
+                        <li><a href="#">Teacher Training Programme</a></li>
+                        <li><a href="#">Daycare</a></li>
+                    </ul>
+                </li>
+
+                <li><a href="#">Péntemind</a></li>
+                <li><a href="#">Admissions</a></li>
+                <li><a href="#">Franchise Opportunity</a></li>
+                <li><a href="#">Locate Us</a></li>
+            </ul>
+
+            <div class="hamburger" onclick="toggleMenu()">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+            </div>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Where Learning Begins with Joy</h1>
+            <p>Providing a safe, nurturing, and stimulating environment for your child's holistic growth. Join our family today!</p>
+            <a href="#admissions" class="btn">Enquire Now</a>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="section-title">Welcome to Our Nursery</div>
+        <div class="about-container">
+            <div class="about-image">
+                <img src="https://images.unsplash.com/photo-1587654780291-39c940483731?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Kids playing">
+            </div>
+            <div class="about-text">
+                <h2>Nurturing the Unique Potential of Every Child</h2>
+                <p>We believe that every child is unique and deserves an environment that fosters their curiosity. Our "Kidzee Advantage" methodology ensures that learning is fun, engaging, and relevant.</p>
+                <br>
+                <p><strong>Our Péntemind Approach:</strong> We focus on the five key areas of development to prepare children not just for school, but for life.</p>
+                <br>
+                <a href="#" class="btn">Read Our Vision</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="programs" class="section" style="background-color: #f9f9f9;">
+        <div class="section-title">Our Programmes</div>
+        <div class="programs-grid">
+            <div class="program-card">
+                <div class="program-img" style="background-image: url('https://images.unsplash.com/photo-1555963966-b7ae5404b6ed?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60');"></div>
+                <div class="program-content">
+                    <h3>Playgroup</h3>
+                    <p>For ages 1.5 - 2.5 Years. Developing social skills and basic coordination through play.</p>
+                </div>
+            </div>
+            <div class="program-card">
+                <div class="program-img" style="background-image: url('https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60');"></div>
+                <div class="program-content">
+                    <h3>Nursery</h3>
+                    <p>For ages 2.5 - 3.5 Years. Introducing structured learning and foundational literacy.</p>
+                </div>
+            </div>
+            <div class="program-card">
+                <div class="program-img" style="background-image: url('https://images.unsplash.com/photo-1516627145497-ae6968895b74?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60');"></div>
+                <div class="program-content">
+                    <h3>Kindergarten</h3>
+                    <p>For ages 3.5 - 5.5 Years. Preparing for primary school with advanced concepts.</p>
+                </div>
+            </div>
+            <div class="program-card">
+                <div class="program-img" style="background-image: url('https://images.unsplash.com/photo-1577896337318-2838d1b16c04?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60');"></div>
+                <div class="program-content">
+                    <h3>Daycare</h3>
+                    <p>A safe, home-like environment for your child after school hours.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="features">
+        <div class="features-grid">
+            <div class="feature-item">
+                <h2>🎨</h2>
+                <h3>Creative Arts</h3>
+            </div>
+            <div class="feature-item">
+                <h2>🛡️</h2>
+                <h3>Safe Campus</h3>
+            </div>
+            <div class="feature-item">
+                <h2>👩‍🏫</h2>
+                <h3>Expert Teachers</h3>
+            </div>
+            <div class="feature-item">
+                <h2>🥗</h2>
+                <h3>Healthy Meals</h3>
+            </div>
+        </div>
+    </section>
+
+    <section id="admissions" class="section contact-section">
+        <div class="section-title">Admissions & Inquiry</div>
+        <div class="contact-wrapper">
+            <div class="contact-form">
+                <h3>Send us a Message</h3>
+                <form>
+                    <div class="form-group">
+                        <input type="text" placeholder="Parent's Name" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" placeholder="Child's Name" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" placeholder="Email Address" required>
+                    </div>
+                    <div class="form-group">
+                        <select>
+                            <option>Select Programme</option>
+                            <option>Playgroup</option>
+                            <option>Nursery</option>
+                            <option>Kindergarten</option>
+                            <option>Daycare</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <textarea rows="4" placeholder="Your Message"></textarea>
+                    </div>
+                    <button type="submit" class="btn">Submit Inquiry</button>
+                </form>
+            </div>
+            <div class="contact-info">
+                <h3>Locate Us</h3>
+                <p>123 Sunshine Street, Green Valley</p>
+                <p>City, State, Zip Code</p>
+                <br>
+                <h3>Contact</h3>
+                <p>📞 +1 234 567 8900</p>
+                <p>✉️ admissions@nurseryname.com</p>
+                <br>
+                <h3>Opening Hours</h3>
+                <p>Mon - Fri: 8:00 AM - 6:00 PM</p>
+                <p>Sat: 9:00 AM - 1:00 PM</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-col">
+                <h4>About Us</h4>
+                <ul>
+                    <li><a href="#">Legacy</a></li>
+                    <li><a href="#">Vision & Mission</a></li>
+                    <li><a href="#">Awards</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Programmes</h4>
+                <ul>
+                    <li><a href="#">Playgroup</a></li>
+                    <li><a href="#">Nursery</a></li>
+                    <li><a href="#">Teacher Training</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Support</h4>
+                <ul>
+                    <li><a href="#">Admissions Guide</a></li>
+                    <li><a href="#">Franchise FAQ</a></li>
+                    <li><a href="#">Contact Support</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            &copy; 2024 Nursery Name. All Rights Reserved.
+        </div>
+    </footer>
+
+    <script>
+        function toggleMenu() {
+            const navLinks = document.querySelector('.nav-links');
+            navLinks.classList.toggle('active');
+        }
+    </script>
+</body>
+</html>
